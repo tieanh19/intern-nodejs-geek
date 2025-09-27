@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         String         @id @default(uuid())
+  username   String         @unique
+  password   String
+  name       String
+  cart       Cart?
+  orders     Orders[]       @relation("UserOrders")
+  addresses  UserAddress[]
+}
+
+model UserAddress {
+  id         String   @id @default(uuid())
+  province   String
+  district   String
+  ward       String
+  user_name  String
+  user_phone String
+  user_id    String
+  is_default Boolean   @default(false)
+  user       Users     @relation(fields: [user_id], references: [id])
+}
+
+model StoreBranches {
+  id      String @id @default(uuid())
+  name    String
+  phone   String
+  address String
+}
+
+model Categories {
+  id          String   @id @default(uuid())
+  imageUri    String
+  name        String
+  description String
+  products    Products[]
+}
+
+model Products {
+  id          String           @id @default(uuid())
+  name        String
+  description String
+  category_id String
+  coverImg    String
+  category    Categories       @relation(fields: [category_id], references: [id])
+  variants    ProductVariants[]
+}
+
+model ProductVariants {
+  id                 String   @id @default(uuid())
+  productId          String
+  size               String
+  color              String
+  imageUri           String
+  price              Float
+  quantity           Int
+  discount_percentage Int
+  product            Products @relation(fields: [productId], references: [id])
+  cartItems          CartItems[]
+  orderDetails       OrderDetails[]
+}
+
+model Cart {
+  id      String     @id @default(uuid())
+  user_id String     @unique
+  user    Users      @relation(fields: [user_id], references: [id])
+  items   CartItems[]
+}
+
+model CartItems {
+  id                String          @id @default(uuid())
+  product_variant_id String
+  quantity          Int
+  cartId            String
+  cart              Cart            @relation(fields: [cartId], references: [id])
+  productVariant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+}
+
+model Orders {
+  id             String        @id @default(uuid())
+  customer_id    String
+  payment_method PaymentMethod
+  order_info_id  String
+  create_at      DateTime      @default(now())
+  status         OrderStatus   @default(PENDING)
+  customer       Users         @relation("UserOrders", fields: [customer_id], references: [id])
+  orderInfo      OrderInfos    @relation(fields: [order_info_id], references: [id])
+  details        OrderDetails[]
+}
+
+model OrderDetails {
+  id                String          @id @default(uuid())
+  product_variant_id String
+  order_id          String
+  quantity          Int
+  price             Float
+  order             Orders          @relation(fields: [order_id], references: [id])
+  productVariant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+}
+
+model OrderInfos {
+  id             String @id @default(uuid())
+  address        String
+  receiver_name  String
+  receiver_phone String
+  orders         Orders[]
+}
+
+model Vouchers {
+  id            String        @id @default(uuid())
+  code          String        @unique
+  discount_type DiscountType
+  discount_value Float
+  description   String
+  min_order_value Float
+  max_discount  Float
+  start_date    DateTime
+  end_date      DateTime
+  usage_limit   Int
+}
+
+enum PaymentMethod {
+  VNPAY
+  CASH
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
