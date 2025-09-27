@@ -1,6 +1,6 @@
 import Product from "../models/Product";
 import { connectDB } from "../config/db";
-import elasticsearchService from "../service/elasticSearch.service";
+import elasticsearchService from "../service/utils/elasticSearch.service";
 import 'dotenv/config';
 import productService from '../service/product.service';
 

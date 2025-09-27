@@ -1,4 +1,4 @@
-import prisma from '../prisma.service';
+import prisma from '../utils/prisma.service';
 import { Products } from '@prisma/client';
 
 class ProductService {

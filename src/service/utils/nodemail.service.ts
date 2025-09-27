@@ -1,11 +1,7 @@
 import nodemailer from 'nodemailer'
-import { NotificationDto, VerifyEmail } from '../dto/request/notification.dto'
-// import { QueueNameEnum } from '~/enums/rabbitQueue.enum'
-import dotenv from 'dotenv'
-import { EmailTypeEnum } from '../enums/emailType.enum'
-import { renderTemplate } from '../utils/templateUtil'
-
-dotenv.config()
+import { NotificationDto, OrderConfirmationData } from '../../dto/request/notification.dto'
+import { QueueNameEnum } from '../../enums/emailType.enum'
+import { renderTemplate } from '../../utils/templateUtil'
 
 // Interface cho options gửi mail
 export interface SendEmailOptions {
@@ -20,12 +16,11 @@ class NodeMailService {
 
   constructor() {
     if (NodeMailService.transporter === null) {
-      console.log('Setting up NodeMailService transporter...', process.env.GMAIL_USER, process.env.GMAIL_PASS)
       NodeMailService.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS
         }
       })
     }
@@ -34,7 +29,7 @@ class NodeMailService {
   private async send(options: SendEmailOptions): Promise<nodemailer.SentMessageInfo> {
     try {
       const info = await NodeMailService.transporter?.sendMail({
-        from: '"Shopping with Phamtienanh" <phama9162@gmail.com>',
+        from: '"Phạm Tiến Anh" <phama9162@gmail.com>',
         to: options.to,
         subject: options.subject,
         text: options.text,
@@ -52,30 +47,26 @@ class NodeMailService {
   // public send mail
   async sendMail(notification: NotificationDto): Promise<void> {
     let subject = ''
-    let to
+    let to: string[] = []
     let templateName = ''
     let templateData = {}
 
     switch (notification.type) {
-      case EmailTypeEnum.VERIFY_EMAIL: {
-        const emailNotification = notification as VerifyEmail
+      case QueueNameEnum.ORDER_CONFIRMATION: {
+        const orderNotification = notification as OrderConfirmationData
 
-        subject = 'Hãy xác thực tài khoản của bạn'
-        to = emailNotification.email
-        templateName = 'email-verification.html'
-        templateData = { name: emailNotification.name, token: emailNotification.token }
-        break
-      }
-      case EmailTypeEnum.FORGOT_PASSWORD_OTP: {
-        const emailNotification = notification as VerifyEmail
-        subject = 'Mã OTP khôi phục mật khẩu'
-        to = emailNotification.email
-        templateName = 'email-verification.html'
-        templateData = { name: emailNotification.name, token: emailNotification.token }
+        subject = `Xác nhận đơn hàng #${orderNotification.orderId}`
+        to = orderNotification.email
+        templateName = 'order-confirmation.html'
+        templateData = {
+          orderId: orderNotification.orderId,
+          customerName: orderNotification.customerName,
+          orderDate: orderNotification.orderDate,
+          items: orderNotification.items
+        }
         break
       }
 
-      // Thêm các loại khác nếu cần
       default:
         console.log(`Chưa thể gửi mail to ${notification.email}: ${notification.type}`)
         return
@@ -87,7 +78,7 @@ class NodeMailService {
     const mailPayload: SendEmailOptions = {
       to,
       subject,
-      text: html.replace(/<[^>]+>/g, ''), // Convert HTML to plain text thô sơ
+      text: html.replace(/<[^>]+>/g, ''),
       html
     }
 

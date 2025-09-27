@@ -3,7 +3,7 @@ import { JwtPayloadDto } from '~/dto/request/auth.dto'
 
 declare module 'express-serve-static-core' {
   interface Request {
-    userId?: string
+    user?: JwtPayloadDto
     data?: any
   }
 }

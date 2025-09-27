@@ -1,4 +1,4 @@
-export enum EmailTypeEnum {
+export enum QueueNameEnum {
   VERIFY_EMAIL = 'verify-email',
-  FORGOT_PASSWORD_OTP = 'FORGOT_PASSWORD_OTP'
+  ORDER_CONFIRMATION = 'order-confirmation'
 }

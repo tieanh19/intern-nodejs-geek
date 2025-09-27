@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Xác nhận đơn hàng #{{orderId}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background-color: #f7f9fc;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+      }
+
+      .title {
+        font-size: 24px;
+        color: #333333;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .order-info {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      .product-table th {
+        background-color: #1d4e8f;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .product-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .product-table tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .footer {
+        font-size: 12px;
+        color: #999999;
+        margin-top: 30px;
+        text-align: center;
+        border-top: 1px solid #e9ecef;
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="title">🎉 Đặt hàng thành công!</h1>
+      
+      <div class="order-info">
+        <p><strong>Đơn hàng:</strong> #{{orderId}}</p>
+        <p><strong>Khách hàng:</strong> {{customerName}}</p>
+        <p><strong>Ngày đặt:</strong> {{orderDate}}</p>
+      </div>
+
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>Sản phẩm</th>
+            <th style="text-align: center;">Số lượng</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr>
+            <td>{{productName}}</td>
+            <td style="text-align: center;">{{quantity}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class="footer">
+        <p>Cảm ơn bạn đã đặt hàng!</p>
+        <p>© 2025 dev by t9tieanh.</p>
+      </div>
+    </div>
+  </body>
+</html>

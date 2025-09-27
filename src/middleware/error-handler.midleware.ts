@@ -25,5 +25,5 @@ export const errorHandlingMiddleware = (err: ApiError, req: Request, res: Respon
   // console.error(responseError)
 
   // Trả responseError về phía Front-end
-  res.status(StatusCodes.OK).json(responseError)
+  res.status(err.status !== 401 ? StatusCodes.OK : err.status).json(responseError)
 }

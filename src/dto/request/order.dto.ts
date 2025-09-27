@@ -40,10 +40,6 @@ class OrderItemDto {
 }
 
 export class CreateOrderDto {
-  @IsString()
-  @IsNotEmpty()
-  customerId: string | undefined;
-
   @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod | undefined;
 

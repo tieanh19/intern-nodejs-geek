@@ -19,6 +19,7 @@ model Users {
   username   String         @unique
   password   String
   name       String
+  email      String         @unique
   cart       Cart?
   orders     Orders[]       @relation("UserOrders")
   addresses  UserAddress[]
@@ -92,7 +93,7 @@ model CartItems {
 }
 
 model Orders {
-  id             String        @id @default(uuid())
+  id             String        @id @default(cuid())
   customer_id    String
   payment_method PaymentMethod
   order_info_id  String
