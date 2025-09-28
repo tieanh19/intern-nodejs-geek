@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'crypto'
 import { vnpayConfig } from '../../config/payment'
-import dateFormat from 'dateformat'
 import ApiError from '../../middleware/ApiError'
 import StatusCodes from 'http-status-codes'
 
@@ -77,6 +76,7 @@ export class VnpayService {
       const { amount, orderId, ipAddr } = data
 
       // Generate create date & expire date
+      const { default: dateFormat } = await import('dateformat')
       const date = new Date()
       const createDate = dateFormat(date, 'yyyymmddHHmmss')
 

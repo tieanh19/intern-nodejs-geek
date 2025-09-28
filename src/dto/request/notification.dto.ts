@@ -11,6 +11,7 @@ export interface OrderConfirmationData extends NotificationDto {
   orderId: string
   customerName: string
   orderDate: string
+  totalAmount: number
   items: Array<{
     productName: string
     quantity: number

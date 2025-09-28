@@ -5,5 +5,6 @@ const router = Router();
 
 // get products with pagination
 router.get('/', productController.getAllProducts);
+router.get('/search', productController.getProductByQuery);
 
 export default router;

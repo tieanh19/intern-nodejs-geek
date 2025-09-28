@@ -171,7 +171,8 @@ class OrderService {
             items: order.orderDetails.map(od => ({
                 productName: od.productVariant?.product.name,
                 quantity: od.quantity,
-            }))
+            })),
+            totalAmount: order.orderDetails.reduce((sum, item) => sum + item.price * item.quantity, 0).toLocaleString('vi-VN')
         } as NotificationDto, QueueNameEnum.ORDER_CONFIRMATION)
 
 

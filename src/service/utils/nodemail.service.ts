@@ -62,7 +62,8 @@ class NodeMailService {
           orderId: orderNotification.orderId,
           customerName: orderNotification.customerName,
           orderDate: orderNotification.orderDate,
-          items: orderNotification.items
+          items: orderNotification.items,
+          totalAmount: orderNotification.totalAmount
         }
         break
       }
